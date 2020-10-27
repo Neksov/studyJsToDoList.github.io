@@ -1,5 +1,4 @@
 'use strict';
-
 let isNumber = function(n){ //проверка входящих prompt
   return !isNaN(parseFloat(n)) && isFinite(n)
 };
@@ -7,20 +6,15 @@ let isNumber = function(n){ //проверка входящих prompt
 const todoControl = document.querySelector('.todo-control'),
   headerInput = document.querySelector('.header-input'),
   todoList = document.querySelector('.todo-list'),
-  todoCompleted = document.querySelector('.todo-completed'),
-  add = document.querySelector('.header-button'),
-  todoItem = document.querySelector('.todo-item');
+  todoCompleted = document.querySelector('.todo-completed');
 
-//создаем массив 
-const todoData = [
-
-];
+let todoData = [];//создаем массив 
 
 const render = function(){//функция добавляющие наши дела на страницу
   todoList.textContent = '';//пустые строки
   todoCompleted.textContent = '';//пустые строки
 
-  todoData.forEach(function(item){  
+  todoData.forEach((item, i)=>{  
 
     const li = document.createElement('li')//создаем переменную и присваиваем тег li
     li.classList.add('todo-item');// добавляем класс нашему новому li
@@ -44,28 +38,14 @@ const render = function(){//функция добавляющие наши де�
       render();
     });
 
-    const btnToDoRemove = li.querySelector('.todo-remove');//удаление строки
-    btnToDoRemove.addEventListener('click', function(){
-      li.parentElement.remove('todo-item');
+    const todoRemove = li.querySelector('.todo-remove');//удаление строки
+    todoRemove.addEventListener('click',()=>{
+      delete todoData[i]; //удаляем по индексу
       render();
     });
   });
 
-  headerInput.addEventListener('change', function(){//провекра на пустую строку
-    if(headerInput.value === '' || isNumber(headerInput.value)){
-      headerInput.value = '';
-      add.disabled = true;
-      render();
-    }else{ 
-      add.disabled = false;
-    }
-    console.log(add.disabled);
-  });
-
 };
-
-
-
 //submit,так как при нажатии кнопки происходит submit 
 //отключем переключение страницы после нажатия на плюс,убираем стандарное поведение браузера
 todoControl.addEventListener('submit', function(event){
@@ -74,12 +54,19 @@ todoControl.addEventListener('submit', function(event){
     value: headerInput.value, //данные с инпута
     completed: false
   };
-  headerInput.value = '';
-
-  todoData.push(newTodo);// добавляем новый обьект
-  render();//для обновления наших списков дел
+  if(newTodo.value.trim() === '' || isNumber(newTodo.value)){//проверка на пустую строку и на цифру
+    alert('Повторите еще раз');
+  }else{
+    todoData.push(newTodo);// добавляем новый обьект
+    render();//для обновления наших списков дел
+    headerInput.value = ''; //делаем пустую сторку
+    localStorage.setItem('todoData', JSON.stringify(todoData));//ковектируем в json формат
+    const data = JSON.parse(localStorage.getItem('todoData')); //конвертировать обратно в формат javascript
+    console.log(data);
+  }
 });
-
-add.disabled =  true;//блокируем кнопку
+  todoData = todoData.filter((x) => {///фильтруем наш массив
+  return x !== undefined && x !== null; //возвращаем x только при выполнении условий
+});
 render();//для обновления наших списков дел
 
