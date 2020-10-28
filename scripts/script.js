@@ -1,5 +1,5 @@
 'use strict';
-let isNumber = function(n){ //проверка входящих prompt
+let isNumber = function(n){ //проверка цифры
   return !isNaN(parseFloat(n)) && isFinite(n)
 };
 
@@ -44,6 +44,9 @@ const render = function(){//функция добавляющие наши де�
       render();
     });
   });
+  localStorage.setItem('todoData', JSON.stringify(todoData));//ковектируем в json формат
+  const data = JSON.parse(localStorage.getItem('todoData')); //конвертировать обратно в формат javascript
+  console.log(data);
 
 };
 //submit,так как при нажатии кнопки происходит submit 
@@ -60,9 +63,6 @@ todoControl.addEventListener('submit', function(event){
     todoData.push(newTodo);// добавляем новый обьект
     render();//для обновления наших списков дел
     headerInput.value = ''; //делаем пустую сторку
-    localStorage.setItem('todoData', JSON.stringify(todoData));//ковектируем в json формат
-    const data = JSON.parse(localStorage.getItem('todoData')); //конвертировать обратно в формат javascript
-    console.log(data);
   }
 });
   todoData = todoData.filter((x) => {///фильтруем наш массив
