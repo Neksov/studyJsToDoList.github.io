@@ -37,16 +37,18 @@ const render = function(){//функция добавляющие наши де�
       item.completed = !item.completed;//инвиртируем текущий completed
       render();
     });
+    localStorage.setItem('todoData', JSON.stringify(todoData));//ковектируем в json формат
+    const data = JSON.parse(localStorage.getItem('todoData')); //конвертировать обратно в формат javascript
 
     const todoRemove = li.querySelector('.todo-remove');//удаление строки
     todoRemove.addEventListener('click',()=>{
-      delete todoData[i]; //удаляем по индексу
+    // delete todoData[i]; //удаляем по индексу остояляя null
+    localStorage.clear(todoData.splice(i,1)); //удаляет полностью 
       render();
     });
   });
-  localStorage.setItem('todoData', JSON.stringify(todoData));//ковектируем в json формат
-  const data = JSON.parse(localStorage.getItem('todoData')); //конвертировать обратно в формат javascript
-  console.log(data);
+
+  // console.log(data);
 
 };
 //submit,так как при нажатии кнопки происходит submit 
